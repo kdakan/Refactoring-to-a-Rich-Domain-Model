@@ -30,7 +30,7 @@
 * Do not introduce an unnecessary value object type if there is no validation or logic to do with this value, just use the primitive type instead
 * Make the property setters private or protected (for the ORM to work)
 -----------------------------------------------------------------------------------------------------
-# Moving rest of the logic into entites:
+# Moving rest of the validation and business logic into entites:
 * Entities keep mutable state, have an id, and are identified by this id property
 * Entities, like the value objects, have encapsulated value fields and behaviors that work on these fields
 * Do not expose collections (Lists, IEnumerables) directly to the outside from the entities
