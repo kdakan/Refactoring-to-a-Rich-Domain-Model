@@ -1,6 +1,6 @@
 # Refactoring from an Anemic Domain Model to a Rich Domain Model
 -----------------------------------------------------------------------------------------------------
-# Anemic domain model:
+## Anemic domain model:
 * Entities with no behavior, only data properties
 * All behavior inside services, controllers or ui layer
 * Lacks encapsulation (cannot guarantee invariables, meaning valid state of entities, mutable parts are accessible from everywhere and open to side-effects)
@@ -8,7 +8,7 @@
 * It is in procedural style (transaction script pattern)
 * Procedural style code does not meain it is in functional style because in functional style, objects should be immutable and pure functions can not change the state of an object
 -----------------------------------------------------------------------------------------------------
-# Domain model exposed to outside through an api contract:
+## Domain model exposed to outside through an api contract:
 * Entities are matched to db tables and columns, and also mostly exposed to outside in the api contract, so refactoring entities breaks  the db and the api contract
 * Prone to over-posting attacks (posting internal fields which should have been encapsulated but are exposed)
 * Use DTOs instead of exposing the domain models (entities, value objects and aggregates)
@@ -20,7 +20,7 @@
 * Do not expose enum types, instead expose string because enums are an implemntation detail and later can be changed to some other type
 * DTOs can be thought of as an Anti-corruption layer in DDD, can be used both for outside facing apis, microservice apis, or for apis surrounding any bounded context
 -----------------------------------------------------------------------------------------------------
-# Moving some of the validation and business logic into value objects:
+## Moving some of the validation and business logic into value objects:
 * Value objects are immutable, simple to track because they are not prune to side-effects
 * Value objects are only identified and differentiated by their values, they do not have an id
 * Value objects have encapsulated value fields and behaviors that work on these fields
@@ -30,7 +30,7 @@
 * Do not introduce an unnecessary value object type if there is no validation or logic to do with this value, just use the primitive type instead
 * Make the property setters private or protected (for the ORM to work)
 -----------------------------------------------------------------------------------------------------
-# Moving rest of the validation and business logic into entites:
+## Moving rest of the validation and business logic into entites:
 * Entities keep mutable state, have an id, and are identified by this id property
 * Entities, like the value objects, have encapsulated value fields and behaviors that work on these fields
 * Do not expose collections (Lists, IEnumerables) directly to the outside from the entities
@@ -46,13 +46,13 @@
 * Make the property setters private or protected (for the ORM to work)
 * Sometimes it is better to move code that changes state and code that return a result into seapate methods to simplify the api of the entity (command query separation), like string CanProcess(...) and void Process(...) instead of string Process(...) or Result<...> Process(...)
 -----------------------------------------------------------------------------------------------------
-# Moving code from fat controllers into application services and middleware:
+## Moving code from fat controllers into application services and middleware:
 * Application service is not a domain service like in DDD, and does not have domain logic in it, but just controller logic
 * If there is too much code in a controller, then it is better to treat the controller as a facade and delegate work to smaller more cohesive application services
 * If we are not using the aggregate pattern in DDD (where aggregate represents a business transaction), then the repositories do npot work on only aggregates and work with any entity and should not commit to db, and should not have a SaveChanges() method, and the responsibility of committing unit of work (...Context in Entity Framewok) to db belongs to the web request method on the controller, and it can be centralized in a base controller class so that after successful invocation, it commits (calles unit of work's SaveChanges() automatically
 * try catch blocks returning http 500 in an exception can delegate this responsibility into a custom exception handling middleware in asp.net core or exception handler in webapi
 -----------------------------------------------------------------------------------------------------
-# Solution/project structure and dependency guidelines:
+## Solution/project structure and dependency guidelines:
 * Do not share domain logic code between different bounded contexts, coupling is worse than code duplication, apply DRY only inside a bounded context
 * Do not create generic domain libraries, apply YAGNI, write minimum amount of code to solve the specific business problem, code and tests are a liability
 * Do not include any infrastructure or external dependencies in the domain models, handle them inside application services
